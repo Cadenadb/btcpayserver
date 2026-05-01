@@ -9,8 +9,9 @@ COPY BTCPayServer.Common/BTCPayServer.Common.csproj BTCPayServer.Common/BTCPaySe
 COPY BTCPayServer.Rating/BTCPayServer.Rating.csproj BTCPayServer.Rating/BTCPayServer.Rating.csproj
 COPY BTCPayServer.Data/BTCPayServer.Data.csproj BTCPayServer.Data/BTCPayServer.Data.csproj
 COPY BTCPayServer.Client/BTCPayServer.Client.csproj BTCPayServer.Client/BTCPayServer.Client.csproj
-RUN --mount=type=secret,id=GITHUB_TOKEN \
-    export GITHUB_TOKEN=$(cat /run/secrets/GITHUB_TOKEN) && \
+RUN git clone --depth=1 https://github.com/cadenadb/NBXplorer.git /nbxplorer-src && \
+    dotnet pack /nbxplorer-src/NBXplorer.Client/NBXplorer.Client.csproj -c Release -o /local-nuget && \
+    dotnet nuget add source /local-nuget --name local-nbxplorer && \
     cd BTCPayServer && dotnet restore
 COPY BTCPayServer.Common/. BTCPayServer.Common/.
 COPY BTCPayServer.Rating/. BTCPayServer.Rating/.
