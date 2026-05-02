@@ -21,4 +21,18 @@ if [ -f "$BTCPAY_SSHAUTHORIZEDKEYS" ] && [[ "$BTCPAY_SSHKEYFILE" ]]; then
     fi
 fi
 
+
+# Copy bundled language packs to datadir/Langs if not already present
+if [ -d "/app/Langs" ]; then
+    mkdir -p "${BTCPAY_DATADIR}/Langs"
+    for lang_file in /app/Langs/*.json; do
+        fname=$(basename "$lang_file")
+        dest="${BTCPAY_DATADIR}/Langs/${fname}"
+        if [ ! -f "$dest" ]; then
+            cp "$lang_file" "$dest"
+            echo "Installed language pack: $fname"
+        fi
+    done
+fi
+
 exec dotnet BTCPayServer.dll

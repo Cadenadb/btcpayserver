@@ -40,4 +40,5 @@ VOLUME /datadir
 
 COPY --from=builder "/app" .
 COPY docker-entrypoint.sh docker-entrypoint.sh
+COPY Langs/ /app/Langs/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
